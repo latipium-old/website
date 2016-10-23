@@ -21,7 +21,7 @@ function tsProj() {
     if [ $dev -eq 1 ]; then
         tsc -p "$1" --sourceMap -w | prefixOutput "$2" &
     else
-        tsc -p "$1" --sourceMap
+        tsc -p "$1" --sourceMap || true
     fi
 }
 tsProj . "[Main TypeScript]     "
