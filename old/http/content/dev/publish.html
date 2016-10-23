@@ -1,0 +1,64 @@
+---
+layout: page
+permalink: /dev/mods/publish/
+navgroup: dev/publish
+title: Publish Module
+excerpt: Allows you to publish one of your modules to the public repository.
+robotIgnore: true
+---
+<div class="container" ng-controller="publish">
+    <form name="publish_form">
+        <div class="row">
+            <p>
+                Please choose the package (*.nupkg) you are going to upload to the Latipium servers.
+                The package id should match one of the namespaces you have created.
+                If you need to reserve a namespace, you can do so <a href="{{ "/dev/mods/new" | prepend: site.baseurl }}">here</a>.
+                All packages must be under 5 MiB.
+            </p>
+        </div>
+        <div class="row">
+            <div class="input-field file-field col s12">
+                <div class="btn">
+                    <span>File</span>
+                    <input type="file" id="publish_file_data" name="publish_file_data" />
+                </div>
+                <div class="file-path-wrapper">
+                    <input type="text" id="publish_file" name="publish_file" ng-model="filename" ng-pattern="'.*\\.nupkg'" required
+                        ng-class="{valid: publish_form.publish_file.$valid && data.files[0].size < 5 * 1024 * 1024, invalid: (publish_form.publish_file.$invalid && !publish_form.publish_file.$pristine) || data.files[0].size >= 5 * 1024 * 1024, 'file-path': true}" />
+                </div>
+            </div>
+            <div class="col s12" ng-hide="publish_form.publish_file.$pristine">
+                <span ng-show="data.files[0].size < 1024">
+                    <span ng-bind="data.files[0].size"></span>
+                    B
+                </span>
+                <span ng-show="data.files[0].size >= 1024 && data.files[0].size < 1024 * 1024">
+                    <span ng-bind="data.files[0].size / 1024 | number: 1"></span>
+                    KiB
+                </span>
+                <span ng-show="data.files[0].size >= 1024 * 1024 && data.files[0].size < 1024 * 1024 * 1024">
+                    <span ng-bind="data.files[0].size / 1024 / 1024 | number: 1"></span>
+                    MiB
+                </span>
+                <span ng-show="data.files[0].size >= 1024 * 1024 * 1024">
+                    <span ng-bind="data.files[0].size / 1024 / 1024 / 1024 | number: 1"></span>
+                    GiB
+                </span>
+                / 5 MiB
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input class="validate" type="checkbox" name="publish_tc" id="publish_tc" ng-model="tc" required />
+                <label for="publish_tc">
+                    I accept the Terms and Conditions
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <button class="btn waves-effect waves-teal" ng-disabled="!(publish_form.publish_file.$valid && tc && data.files[0].size < 5 * 1024 * 1024)" ng-click="publish()">
+                Publish
+            </button>
+        </div>
+    </form>
+</div>

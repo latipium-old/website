@@ -1,0 +1,51 @@
+.angular-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+main {
+    flex: 1 0 auto;
+}
+body, .angular-wrapper, .page {
+    min-height: 100vh;
+}
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.nav-placeholder {
+    position: relative;
+    opacity: 0;
+    z-index: -1;
+}
+.nav-side {
+    z-index: 10001;
+}
+header {
+    z-index: 100;
+}
+.full-width {
+    width: 100%;
+}
+.full-height {
+    height: 100%;
+}
+.must-exist {
+    min-height: 1px;
+    min-width: 1px;
+}
+.side-nav .collapsible-body li.active a {
+    color: #444444;
+}
+.hidden {
+    display: none;
+}
+.placeholder {
+    position: relative;
+    opacity: 0;
+    z-index: -1;
+}
+.height-48 {
+    height: 48px;
+}

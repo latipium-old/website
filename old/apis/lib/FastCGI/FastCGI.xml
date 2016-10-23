@@ -1,0 +1,486 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FastCGI</name>
+    </assembly>
+    <members>
+        <member name="F:FastCGI.Constants.FCGI_LISTENSOCK_FILENO">
+            <summary>
+            Listening socket file number
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_HEADER_LEN">
+            <summary>
+            Number of bytes in a FCGI_Header.
+            Future versions of the protocol will not reduce this number.
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_VERSION_1">
+            <summary>
+            Value for version component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_BEGIN_REQUEST">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_ABORT_REQUEST">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_END_REQUEST">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_PARAMS">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_STDIN">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_STDOUT">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_STDERR">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_DATA">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_GET_VALUES">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_GET_VALUES_RESULT">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_UNKNOWN_TYPE">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_MAXTYPE">
+            <summary>
+            Values for type component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_NULL_REQUEST_ID">
+            <summary>
+            Value for requestId component of FCGI_Header
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_KEEP_CONN">
+            <summary>
+            Mask for flags component of FCGI_BeginRequestBody
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_RESPONDER">
+            <summary>
+            Values for role component of FCGI_BeginRequestBody
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_AUTHORIZER">
+            <summary>
+            Values for role component of FCGI_BeginRequestBody
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_FILTER">
+            <summary>
+            Values for role component of FCGI_BeginRequestBody
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_REQUEST_COMPLETE">
+            <summary>
+            Values for protocolStatus component of FCGI_EndRequestBody
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_CANT_MPX_CONN">
+            <summary>
+            Values for protocolStatus component of FCGI_EndRequestBody
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_OVERLOADED">
+            <summary>
+            Values for protocolStatus component of FCGI_EndRequestBody
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_UNKNOWN_ROLE">
+            <summary>
+            Values for protocolStatus component of FCGI_EndRequestBody
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_MAX_CONNS">
+            <summary>
+            Variable names for FCGI_GET_VALUES / FCGI_GET_VALUES_RESULT records
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_MAX_REQS">
+            <summary>
+            Variable names for FCGI_GET_VALUES / FCGI_GET_VALUES_RESULT records
+            </summary></member>
+        <member name="F:FastCGI.Constants.FCGI_MPXS_CONNS">
+            <summary>
+            Variable names for FCGI_GET_VALUES / FCGI_GET_VALUES_RESULT records
+            </summary></member>
+        <member name="T:FastCGI.FCGIApplication">
+            <summary>
+            Main FastCGI listener class.
+            </summary>
+            <remarks>
+            This class manages a connection to a webserver by listening on a given port on localhost and receiving FastCGI
+            requests by a webserver like Apache or nginx.
+            In FastCGI terms, this class implements the responder role. Refer to section 6.2 of the FastCGI specification
+            for details.
+            Use <see cref="E:FastCGI.FCGIApplication.OnRequestReceived" /> to get notified of received requests. You can call <see cref="M:FastCGI.FCGIApplication.Run(System.Int32)" /> to
+            enter an infinite loopand let the app handle everything.
+            Alternatively, if you want to control the execution flow by yourself, call <see cref="M:FastCGI.FCGIApplication.Listen(System.Int32)" /> to start
+            accepting connections. Then repeatedly call <see cref="M:FastCGI.FCGIApplication.Process" /> to handle incoming requests.
+            If you want to manage the socket connection details by yourself, or for testing purposes,
+            you can also call <see cref="M:FastCGI.FCGIApplication.ProcessSingleRecord(System.IO.Stream,System.IO.Stream)" /> instead of any of the above methods.
+            See the below example to learn how to accept requests.
+            For more detailed information, have a look at the <see cref="T:FastCGI.Request" /> class.
+            If you need to fiddle with the FastCGI packets itself, see the <see cref="T:FastCGI.Record" /> class and read the
+            [FastCGI specification](http://www.fastcgi.com/devkit/doc/fcgi-spec.html).
+            </remarks>
+            <example>
+            <code>
+            // Create a new FCGIApplication, will accept FastCGI requests
+            var app = new FCGIApplication();
+            // Handle requests by responding with a 'Hello World' message
+            app.OnRequestReceived += (sender, request) =&gt; {
+            request.WriteResponseASCII("HTTP/1.1 200 OK\nContent-Type:text/html\n\nHello World!");
+            request.Close();
+            };
+            // Start listening on port 19000
+            app.Run(19000);
+            // You now need a webserver like nginx or Apache to pass incoming requests
+            // via FastCGI to your application.
+            </code>
+            </example></member>
+        <member name="F:FastCGI.FCGIApplication.OpenRequests">
+            <summary>
+            A dictionary of all open <see cref="T:FastCGI.Request">Requests</see>, indexed by the FastCGI request id.
+            </summary></member>
+        <member name="P:FastCGI.FCGIApplication.Connected">
+            <summary>
+            True iff this application is currently connected to a webserver.
+            </summary></member>
+        <member name="E:FastCGI.FCGIApplication.OnRequestReceived">
+            <summary>
+            Will be called when a request has been fully received.
+            </summary>
+            <remarks>
+            Please note that multiple requests can be open at the same time.
+            This means that this event may fire multiple times before you call <see cref="M:FastCGI.Request.Close" /> on the first one.
+            </remarks></member>
+        <member name="E:FastCGI.FCGIApplication.OnRequestIncoming">
+            <summary>
+            Will be called when a new request is incoming, before it has been fully received.
+            </summary>
+            <remarks>
+            At the time of calling, the request will have neither any parameters nor any request body.
+            Please note that multiple requests can be open at the same time.
+            </remarks></member>
+        <member name="P:FastCGI.FCGIApplication.Timeout">
+            <summary>
+            The read/write timeouts in miliseconds for the listening socket, the connections, and the streams.
+            </summary>
+            <remarks>Zero or -1 mean infinite timeout.</remarks></member>
+        <member name="P:FastCGI.FCGIApplication.ListeningSocket">
+            <summary>
+            The main listening socket that is used to establish connections.
+            </summary></member>
+        <member name="P:FastCGI.FCGIApplication.OpenConnections">
+            <summary>
+            A list of open <see cref="T:FastCGI.FCGIStream" /> connections.
+            </summary>
+            <remarks>
+            When a connection is accepted from <see cref="P:FastCGI.FCGIApplication.ListeningSocket" />, it is added here.
+            Contains all connections that were still open after the last <see cref="M:FastCGI.FCGIApplication.Process" /> call.
+            </remarks></member>
+        <member name="M:FastCGI.FCGIApplication.Listen(System.Net.IPEndPoint)">
+            <summary>
+            Starts listening for connections on the given IP end point.
+            </summary></member>
+        <member name="M:FastCGI.FCGIApplication.Process">
+            <summary>
+            Processes all data available on the current FastCGI connection and handles the received data.
+            </summary>
+            <remarks>
+            Call this repeatedly to process incoming requests.
+            Alternatively, you can call <see cref="M:FastCGI.FCGIApplication.Run(System.Int32)" /> once, which will call <see cref="M:FastCGI.FCGIApplication.Listen(System.Int32)" /> and execute this method in an infinite loop.
+            Internally, this method manages reconnections on the network socket and calls <see cref="M:FastCGI.FCGIApplication.ProcessSingleRecord(System.IO.Stream,System.IO.Stream)" />.
+            Returns true if a record was read, false otherwise.
+            </remarks></member>
+        <member name="M:FastCGI.FCGIApplication.ProcessStream(System.IO.Stream,System.IO.Stream)">
+            <summary>
+            Reads and handles all <see cref="T:FastCGI.Record">Records</see> available on the custom inputStream and writes responses to outputStream.
+            </summary>
+            <remarks>
+            Use <see cref="M:FastCGI.FCGIApplication.Process" /> if you don't need a custom stream, but instead want to process the records on the current FastCGI connection.
+            Returns true if a record was read, false otherwise.
+            </remarks></member>
+        <member name="M:FastCGI.FCGIApplication.ProcessSingleRecord(System.IO.Stream,System.IO.Stream)">
+            <summary>
+            Tries to read and handle a <see cref="T:FastCGI.Record" /> from inputStream and writes responses to outputStream.
+            </summary>
+            <remarks>
+            Use <see cref="M:FastCGI.FCGIApplication.ProcessStream(System.IO.Stream,System.IO.Stream)" /> to process all records on a stream.
+            Returns true if a record was read, false otherwise.
+            </remarks></member>
+        <member name="M:FastCGI.FCGIApplication.RequestClosed(FastCGI.Request)">
+            <summary>
+            Used internally to notify the app that a <see cref="T:FastCGI.Request" /> has been closed.
+            </summary>
+            <param name="request"></param></member>
+        <member name="M:FastCGI.FCGIApplication.ConnectionClosed(FastCGI.FCGIStream)">
+            <summary>
+            Used internally to notify the app that a connection has been closed.
+            </summary></member>
+        <member name="M:FastCGI.FCGIApplication.StopListening">
+            <summary>
+            Stops listening for incoming connections.
+            </summary></member>
+        <member name="M:FastCGI.FCGIApplication.Run(System.Int32)">
+            <summary>
+            This method never returns! Starts listening for FastCGI requests on the given port.
+            </summary>
+            <remarks>
+            Use <see cref="E:FastCGI.FCGIApplication.OnRequestReceived" /> to react to incoming requests.
+            Internally, this simply calls <see cref="M:FastCGI.FCGIApplication.Listen(System.Int32)" /> and enters an infinite loop of <see cref="M:FastCGI.FCGIApplication.Process" /> calls.
+            </remarks></member>
+        <member name="T:FastCGI.FCGIStream">
+            <summary>
+            Represents a FastCGI connection to a webserver.
+            </summary>
+            <remarks>
+            At any given time, a single <see cref="T:FastCGI.FCGIApplication" /> may have any number of open FCGIStream connections (including zero).
+            No attempt is made to limit that number.
+            This is basically just an extension of <see cref="T:System.Net.Sockets.NetworkStream" />, with the underlying <see cref="T:System.Net.Sockets.Socket" /> exposed.
+            </remarks></member>
+        <member name="M:FastCGI.FCGIStream.#ctor(System.Net.Sockets.Socket)">
+            <summary>
+            Creates a new FastCGI connection from a given socket connection.
+            </summary></member>
+        <member name="P:FastCGI.FCGIStream.IsConnected">
+            <summary>
+            True iff the connection is still open.
+            </summary></member>
+        <member name="P:FastCGI.FCGIStream.Socket">
+            <summary>
+            The underlying socket of the
+            </summary></member>
+        <member name="T:FastCGI.Record">
+            <summary>
+            A FastCGI Record.
+            </summary>
+            <remarks>
+            See section 3.3 of the FastCGI Specification for details.
+            </remarks></member>
+        <member name="T:FastCGI.Record.RecordType">
+            <summary>
+            Record types, used in the 'type' field of Record.
+            </summary>
+            <remarks>
+            Described in the FastCGI Specification section 8.
+            </remarks></member>
+        <member name="T:FastCGI.Record.ProtocolStatus">
+            <summary>
+            Protocol status used for requests.
+            Described in the FastCGI Specification section 8.
+            </summary></member>
+        <member name="F:FastCGI.Record.Version">
+            <summary>
+            The version byte. Should always equal <see cref="F:FastCGI.Constants.FCGI_VERSION_1" />.
+            </summary></member>
+        <member name="F:FastCGI.Record.Type">
+            <summary>
+            The <see cref="T:FastCGI.Record.RecordType" /> of this record.
+            </summary></member>
+        <member name="F:FastCGI.Record.RequestId">
+            <summary>
+            The request id associated with this record.
+            </summary></member>
+        <member name="F:FastCGI.Record.ContentLength">
+            <summary>
+            The length of <see cref="F:FastCGI.Record.ContentData" />.
+            </summary></member>
+        <member name="F:FastCGI.Record.ContentData">
+            <summary>
+            The data contained in this record.
+            </summary></member>
+        <member name="M:FastCGI.Record.ReadNameValuePairs(System.IO.Stream)">
+            <summary>
+            Tries to read a dictionary of name-value pairs from the given stream
+            </summary>
+            <remarks>
+            This method does not make any attempt to make sure whether this record actually contains a set of name-value pairs.
+            It will return nonsense or throw an EndOfStreamException if the record content does not contain valid name-value pairs.
+            </remarks></member>
+        <member name="M:FastCGI.Record.SetNameValuePairs(System.Collections.Generic.Dictionary{System.String,System.Byte[]})">
+            <summary>
+            Sets the record <see cref="F:FastCGI.Record.ContentData" /> to a given dictionary of name-value pairs.
+            </summary></member>
+        <member name="M:FastCGI.Record.ReadVarLength(System.IO.Stream)">
+            <summary>
+            Reads a length from the given stream, which is encoded in one or four bytes.
+            </summary>
+            <remarks>
+            See section 3.4 of the FastCGI specification for details.
+            </remarks></member>
+        <member name="M:FastCGI.Record.WriteVarLength(System.IO.Stream,System.UInt32)">
+            <summary>
+            Writes a length from the given stream, which is encoded in one or four bytes.
+            </summary>
+            <remarks>
+            See section 3.4 of the FastCGI specification for details.
+            </remarks></member>
+        <member name="M:FastCGI.Record.ReadByte(System.IO.Stream)">
+            <summary>
+            Reads a single byte from the given stream.
+            </summary></member>
+        <member name="M:FastCGI.Record.ReadInt16(System.IO.Stream)">
+            <summary>
+            Reads a 16-bit integer from the given stream.
+            </summary></member>
+        <member name="M:FastCGI.Record.WriteInt16(System.IO.Stream,System.UInt16)">
+            <summary>
+            Writes a 16-bit integer to the given stream.
+            </summary></member>
+        <member name="M:FastCGI.Record.ReadRecord(System.IO.Stream)">
+            <summary>
+            Reads a single Record from the given stream.
+            </summary>
+            <remarks>
+            Returns the retreived record or null if no record could be read.
+            Will block if a partial record is on the stream, until the full record has arrived or a timeout occurs.
+            </remarks></member>
+        <member name="M:FastCGI.Record.WriteToStream(System.IO.Stream)">
+            <summary>
+            Writes this record to the given stream.
+            </summary>
+            <returns>Returns the number of bytes written.</returns></member>
+        <member name="M:FastCGI.Record.CreateStdout(System.Byte[],System.Int32)">
+            <summary>
+            Creates a Stdout record from the given data and request id
+            </summary></member>
+        <member name="M:FastCGI.Record.CreateEndRequest(System.Int32)">
+            <summary>
+            Creates a EndRequest record with the given request id
+            </summary></member>
+        <member name="M:FastCGI.Record.CreateGetValuesResult(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Creates a GetValuesResult record from the given config values.
+            </summary></member>
+        <member name="M:FastCGI.Record.Send(System.IO.Stream)">
+            <summary>
+            Used internally. Writes the record to the given stream. Used for sending records to the webserver.
+            </summary></member>
+        <member name="T:FastCGI.Request">
+            <summary>
+            A FastCGI request.
+            </summary>
+            <remarks>
+            A request usually corresponds to a HTTP request that has been received by the webserver (see the [FastCGI specification](http://www.fastcgi.com/devkit/doc/fcgi-spec.html) for details).
+            You will probably want to use <see cref="M:FastCGI.Request.WriteResponse(System.Byte[])" /> or its helper methods to output a response and then call <see cref="M:FastCGI.Request.Close" />. Use <see cref="E:FastCGI.FCGIApplication.OnRequestReceived" /> to be notified of new requests.
+            Remember to call <see cref="M:FastCGI.Request.Close" /> when you wrote the complete response.
+            </remarks></member>
+        <member name="M:FastCGI.Request.#ctor(System.Int32,System.IO.Stream,FastCGI.FCGIApplication,System.Boolean)">
+            <summary>
+            Creates a new request. Usually, you don't need to call this.
+            </summary>
+            <remarks> Records are created by <see cref="T:FastCGI.FCGIApplication" /> when a new request has been received.</remarks></member>
+        <member name="P:FastCGI.Request.ResponseStream">
+            <summary>
+            The stream where responses to this request should be written to.
+            Only write FastCGI records here, not the raw response body. Use <see cref="M:FastCGI.Request.WriteResponse(System.Byte[])" /> for sending response data.
+            </summary></member>
+        <member name="F:FastCGI.Request.ManagingApp">
+            <summary>
+            The FCGIApplication that manages this requests. Can be null if this request is not associated with any FCGIApplication.
+            </summary>
+            <remarks>The request will notify this app about certain events, for example when the request is closed.</remarks></member>
+        <member name="P:FastCGI.Request.KeepAlive">
+            <summary>
+            True iff the webserver set the KeepAlive flag for this request
+            </summary>
+            <remarks>
+            This indicates that the socket used for this request should be left open.
+            This is used internally by <see cref="T:FastCGI.FCGIApplication" />.
+            </remarks></member>
+        <member name="P:FastCGI.Request.RequestId">
+            <summary>
+            The id for this request, issued by the webserver
+            </summary></member>
+        <member name="F:FastCGI.Request.Parameters">
+            <summary>
+            The FastCGI parameters received by the webserver, in raw byte arrays.
+            </summary>
+            <remarks>
+            Use <see cref="M:FastCGI.Request.GetParameterASCII(System.String)" /> and <see cref="M:FastCGI.Request.GetParameterUTF8(System.String)" /> to get strings instead of byte arrays.
+            </remarks></member>
+        <member name="M:FastCGI.Request.GetParameterASCII(System.String)">
+            <summary>
+            Returns the parameter with the given name as an ASCII encoded string.
+            </summary></member>
+        <member name="M:FastCGI.Request.GetParameterUTF8(System.String)">
+            <summary>
+            Returns the parameter with the given name as an UTF-8 encoded string.
+            </summary></member>
+        <member name="P:FastCGI.Request.RequestBodyStream">
+            <summary>
+            A stream providing the request body.
+            </summary>
+            <remarks>
+            For POST requests, this will contain the POST variables. For GET requests, this will be empty.
+            </remarks></member>
+        <member name="P:FastCGI.Request.FinishedParameters">
+            <summary>
+            True iff the parameters have been fully received.
+            </summary></member>
+        <member name="M:FastCGI.Request.GetBody(System.Text.Encoding)">
+            <summary>
+            Decodes the request body into a string with the given encoding and returns it.
+            </summary>
+            <param name="encoding">The encoding to use. If null or omitted, Encoding.ASCII will be used.</param>
+            <remarks>
+            Will return incomplete data until FinishedRequestBody is true.
+            </remarks></member>
+        <member name="M:FastCGI.Request.GetBody">
+            <summary>
+            Writes the request body to a byte array and returns it.
+            </summary>
+            <remarks>
+            Will return incomplete data until FinishedRequestBody is true.
+            </remarks></member>
+        <member name="M:FastCGI.Request.HandleRecord(FastCGI.Record)">
+            <summary>
+            Used internally. Feeds a <see cref="T:FastCGI.Record">Record</see> to this request for processing.
+            </summary>
+            <param name="record">The record to feed.</param>
+            <returns>Returns true iff the request is completely received.</returns></member>
+        <member name="M:FastCGI.Request.WriteResponse(System.Byte[])">
+            <summary>
+            Appends data to the response body.
+            </summary>
+            <remarks>
+            The given data will be sent immediately to the webserver as a single stdout record.
+            </remarks>
+            <param name="data">The data to append.</param></member>
+        <member name="M:FastCGI.Request.WriteResponseASCII(System.String)">
+            <summary>
+            Appends an ASCII string to the response body.
+            </summary>
+            <remarks>
+            This is a helper function, it converts the given string to ASCII bytes and feeds it to <see cref="M:FastCGI.Request.WriteResponse(System.Byte[])" />.
+            </remarks>
+            <param name="data">The string to append, encoded in ASCII.</param>
+            <seealso cref="M:FastCGI.Request.WriteResponse(System.Byte[])" />
+            <seealso cref="M:FastCGI.Request.WriteResponseUtf8(System.String)" /></member>
+        <member name="M:FastCGI.Request.WriteResponseUtf8(System.String)">
+            <summary>
+            Appends an UTF-8 string to the response body.
+            </summary>
+            <remarks>
+            This is a helper function, it converts the given string to UTF-8 bytes and feeds it to <see cref="M:FastCGI.Request.WriteResponse(System.Byte[])" />.
+            </remarks>
+            <param name="data">The string to append, encoded in UTF-8.</param>
+            <seealso cref="M:FastCGI.Request.WriteResponse(System.Byte[])" />
+            <seealso cref="M:FastCGI.Request.WriteResponseASCII(System.String)" /></member>
+        <member name="M:FastCGI.Request.Close">
+            <summary>
+            Closes this request.
+            </summary></member>
+    </members>
+</doc>

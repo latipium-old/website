@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col s12" ng-hide="world.IsEditingName()" ng-dblclick="world.EditName()">
+        <h3 ng-bind="world.Name"></h3>
+    </div>
+    <div class="col s12" ng-show="world.IsEditingName()" ng-dblclick="world.StopEditing()">
+        <input type="text" ng-model="world.Name" />
+    </div>
+</div>
+<div class="row">
+    <div class="col s12" ng-hide="world.IsEditingLocation()" ng-dblclick="world.EditLocation()">
+        <span ng-show="world.Local">
+            <h6 ng-bind="world.Location"></h6>
+        </span>
+        <span ng-hide="world.Local">
+            <h6>
+                Remote connection to <span ng-bind="world.Location"></span>:<span ng-bind="world.Port"></span>
+            </h6>
+        </span>
+    </div>
+    <div class="col s12 input-field" ng-show="world.IsEditingLocation()" ng-dblclick="world.StopEditing()">
+        <div class="input-field">
+            <select style="width: auto" ng-model="world.Local" ng-options="o.v as o.k for o in [{k: 'Local world at', v: true}, {k: 'Remote connection to', v: false}]"></select>
+        </div>
+        <span ng-show="world.Local">
+            <input type="text" ng-model="world.Location" />
+        </span>
+        <span ng-hide="world.Local">
+            <h6 class="world-edit-box">
+                <input class="world-edit-addr" style="width: auto" type="text" ng-model="world.Location" />
+                <input class="world-edit-delim" style="width: 4px; color: #000000; border-bottom: 1px solid #9E9E9E;" type="text" value=":" disabled />
+                <input class="world-edit-port" style="width: 100px" type="number" ng-model="world.Port" />
+            </h6>
+        </span>
+    </div>
+</div>

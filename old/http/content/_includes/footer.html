@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="row">
+        <div class="col 16 s8">
+            <h5 class="white-text">
+                Latipium
+            </h5>
+            <p class="grey-text text-lighten-4">
+                Subscribe
+                <a class="grey-text text-lighten-4" href="{{ "/feed.xml" | prepend: site.baseurl }}">
+                    via RSS
+                </a>
+            </p>
+        </div>
+        {% if page.trademark %}
+        <div class="col 16 s4 grey-text text-lighten-4">
+            {{ page.trademark }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div class="footer-copyright">
+    <div class="container">
+        &copy; 2016 Zach Deibert.
+        All Rights Reserved.
+    </div>
+</div>

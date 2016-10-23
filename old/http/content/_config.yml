@@ -1,0 +1,12 @@
+title: Latipium
+email: help@latipium.com
+description: >
+  Latipium is a 3D game in which you can explore and build almost everything
+  you can imagine.
+baseurl: ""
+url: "https://latipium.com"
+exclude:
+- "tsconfig.json"
+markdown: kramdown
+gems:
+- jekyll-angular

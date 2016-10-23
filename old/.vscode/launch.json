@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Electron",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/http/content/node_modules/.bin/electron",
+            "stopOnEntry": false,
+            "args": [
+                "${workspaceRoot}/http/content"
+            ],
+            "cwd": "${workspaceRoot}/http/content",
+            "preLaunchTask": null,
+            "runtimeExecutable": null,
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "externalConsole": false,
+            "sourceMaps": true,
+            "outDir": null
+        }
+    ]
+}

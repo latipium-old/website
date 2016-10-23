@@ -1,0 +1,7 @@
+_site
+.sass-cache
+.jekyll-metadata
+js/*
+!js/.dir
+node_modules
+typings

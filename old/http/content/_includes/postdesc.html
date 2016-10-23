@@ -1,0 +1,10 @@
+ <div class="row post">
+    <div class="col s12">
+        <span>{{ post.date | date: "%b %-d, %Y" }}</span>
+        <h2>
+            <a href="{{ post.url | prepend: site.baseurl }}">
+                {{ post.title}}
+            </a>
+        </h2>
+    </div>
+</div>

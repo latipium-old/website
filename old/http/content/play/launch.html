@@ -1,0 +1,23 @@
+---
+permalink: /play/launch.html
+navgroup: play/launch
+layout: launcher
+excerpt: Home page of the Latipium launcher
+robotIgnore: true
+relative: ..
+launcher: true
+---
+<span class="angular-wrapper">
+    <span  ng-controller="header">
+        {% include header.html %}
+    </span>
+    <main>
+        <header class="placeholder">
+            <nav></nav>
+        </header>
+        {% include launch.html %}
+    </main>
+    <footer class="page-footer light-blue darken-1{% if page.navgroup == "play/launch" %} play{% endif %}">
+        {% include footer.html %}
+    </footer>
+</span>

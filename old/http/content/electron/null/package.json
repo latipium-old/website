@@ -1,0 +1,6 @@
+{
+    "name": "latipium-launcher",
+    "productName": "Latipium",
+    "version": "1.0.0",
+    "main": "_site/js/updater.js"
+}

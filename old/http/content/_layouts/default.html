@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% include head.html %}
+    </head>
+    <body>
+        <span class="angular-wrapper">
+            <span  ng-controller="header">
+                {% include header.html %}
+            </span>
+            <main>
+                {{ content }}
+            </main>
+            <footer class="page-footer light-blue darken-1{% if page.navgroup == "play/launch" %} play{% endif %}">
+                {% include footer.html %}
+            </footer>
+        </span>
+    </body>
+</html>

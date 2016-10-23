@@ -1,0 +1,8 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "sourceMap": true,
+        "sourceRoot": "../electron/",
+        "outDir": "../js/"
+    }
+}

@@ -1,0 +1,2 @@
+deb http://download.mono-project.com/repo/debian wheezy/snapshots/4.2.3.4 main
+deb http://download.mono-project.com/repo/debian wheezy-libjpeg62-compat main

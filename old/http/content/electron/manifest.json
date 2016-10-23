@@ -1,0 +1,59 @@
+{
+    "id": "$Id$",
+    "dirs": [
+        "app",
+        "app/_site",
+        "app/_site/css",
+        "app/_site/js",
+        "app/_site/play",
+        "app/_site/play/login",
+        "app/_site/play/login/logout",
+        "app/_site/play/login/callback"
+    ],
+    "files": [
+        {
+            "from": "https://latipium.com/css/main.css",
+            "to": "app/_site/css/main.css"
+        },
+        {
+            "from": "https://latipium.com/css/play.css",
+            "to": "app/_site/css/play.css"
+        },
+        {
+            "from": "https://latipium.com/js/electron.js",
+            "to": "app/_site/js/electron.js"
+        },
+        {
+            "from": "https://latipium.com/js/updater.js",
+            "to": "app/_site/js/updater.js"
+        },
+        {
+            "from": "https://latipium.com/js/main.js",
+            "to": "app/_site/js/main.js"
+        },
+        {
+            "from": "https://latipium.com/play/login",
+            "to": "app/_site/play/login/index.html"
+        },
+        {
+            "from": "https://latipium.com/play/login/logout",
+            "to": "app/_site/play/login/logout/index.html"
+        },
+        {
+            "from": "https://latipium.com/play/launch.html",
+            "to": "app/_site/play/launch.html"
+        },
+        {
+            "from": "https://latipium.com/play/login/callback",
+            "to": "app/_site/play/login/callback/index.html"
+        },
+        {
+            "from": "https://latipium.com/package.json",
+            "to": "app/package.json"
+        },
+        {
+            "from": "https://latipium.com/electron/manifest.json",
+            "to": "app/manifest.json"
+        }
+    ]
+}

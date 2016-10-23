@@ -1,0 +1,37 @@
+---
+layout: page
+navgroup: play
+permalink: /play/options/
+customHeader: <a id="logo-container" class="brand-logo center">Latipium Options</a><ul class="left"><li><a onclick="Com.Latipium.Website.Play.OptionController.Back()"><i class="material-icons">arrow_back</i></a></li></ul>
+excerpt: Options for Latipium. Any options in the game can be changed here.
+---
+<header class="placeholder">
+    <nav></nav>
+</header>
+<ul class="collapsible popout" data-collapsible="accordion" ng-controller="play">
+    <li ng-repeat="option in options">
+        <div class="collapsible-header">
+            <div class="container full-width">
+                <div class="row" onclick="Com.Latipium.Website.Play.OptionController.RowClick(event)">
+                    <div class="col s4">
+                        <h5 ng-bind="option.Name"></h5>
+                    </div>
+                    <div class="col s7 must-exist">
+                        <input type="text" ng-model="option.Value" ng-show="option.Type == 'string'" />
+                    </div>
+                    <div class="col s1 full-height">
+                        <a class="valign-wrapper full-width full-height">
+                            <h5 class="placeholder">_</h5>
+                            <span class="material-icons valign full-width right-align" onclick="Com.Latipium.Website.Play.OptionController.HelpClick(event)">
+                                help
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="collapsible-body">
+            <p ng-bind="option.Description"></p>
+        </div>
+    </li>
+</ul>

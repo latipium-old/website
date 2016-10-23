@@ -1,0 +1,40 @@
+---
+layout: page
+permalink: /dev/mods/new/
+navgroup: dev/mods/new
+title: Create New Module
+excerpt: Create a new module that can be loaded into Latipium. This will allow you to publish your code into the public repository.
+robotIgnore: true
+---
+<div class="container" ng-controller="newMod">
+    <form name="create_form">
+        <div class="row">
+            <div class="input-field col s12">
+                <input placeholder="http://example.com/development" id="create_homepage" name="create_homepage"
+                    type="text" ng-class="{valid: create_form.create_homepage.$valid, invalid: create_form.create_homepage.$invalid && !create_form.create_homepage.$pristine}"
+                    ng-model="homepage" ng-pattern="'https?://([a-zA-Z0-9-]+\\.)+[a-z]+/[a-zA-Z0-9/_-]*'" required />
+                <label for="create_homepage">Homepage</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input placeholder="My Awesome Module", id="create_name" name="create_name"
+                    type="text" ng-class="{valid: create_form.create_name.$valid, invalid: create_form.create_name.$invalid && !create_form.create_name.$pristine}"
+                    ng-model="module" ng-minlength="4" ng-max-length="16" required />
+                <label for="create_name">Module Name</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input placeholder="Com.Example.Development.MyAwesomeModule" id="create_namespace" name="create_namespace"
+                    type="text" ng-value="generateNamespace(homepage, module)" disabled />
+                <label for="create_namespace">Namespace</label>
+            </div>
+        </div>
+        <div class="row">
+            <button class="btn waves-effect waves-teal" ng-disabled="!(create_form.create_name.$valid && create_form.create_name.$valid)" ng-click="create(generateNamespace(homepage, module))">
+                Create Module
+            </button>
+        </div>
+    </form>
+</div>

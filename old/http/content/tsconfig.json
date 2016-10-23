@@ -1,0 +1,14 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "sourceMap": true,
+        "sourceRoot": "/ts/",
+        "rootDir": "ts/",
+        "outFile": "js/main.js"
+    },
+    "exclude": [
+        "node_modules",
+        "_site",
+        "electron"
+    ]
+}

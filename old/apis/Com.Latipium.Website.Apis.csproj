@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Com.Latipium.Website.Apis.csproj
+    
+    Copyright (c) 2016 Zach Deibert.
+    All Rights Reserved.
+-->
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{8500B6CA-57A3-44A1-A09A-62104EDCFD0F}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Com.Latipium.Website.Apis</RootNamespace>
+    <AssemblyName>Com.Latipium.Website.Apis</AssemblyName>
+    <ReleaseVersion>1.0</ReleaseVersion>
+    <Description>The website APIs for Latipium</Description>
+    <StartupObject>Com.Latipium.Website.Apis.Entry</StartupObject>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AddMigration|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\AddMigration</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <Commandlineparameters>--add-migration</Commandlineparameters>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="log4net">
+      <HintPath>..\..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6">
+      <HintPath>..\..\packages\MySql.Data.Entity.6.9.9\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="LibGit2Sharp">
+      <HintPath>..\..\packages\LibGit2Sharp.0.22.0\lib\net40\LibGit2Sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="FastCGI">
+      <HintPath>lib\FastCGI\FastCGI.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="Microsoft.Web.XmlTransform">
+      <HintPath>..\..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>..\..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Entry.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\DataContext.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\User.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Profile.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\ISubsystem.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Migrations\MigrationGenerator.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Migrations\MigrationConfig.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\SubsystemLoader.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\CgiSubsystem.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\IEndpoint.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\HelloEndpoint.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\InitEndpoint.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\AuthenticatedEndpoint.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\AuthErrorEndpoint.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\TokenRequest.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\TokenResponse.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\UserInfoResponse.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Storage.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\TemporaryContext.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\TemporarySet.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\ApiQuery.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\ApiInitRequest.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\TemporaryDictionary.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\CryptoInsecureToken.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\ApiResponse.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\ApiSubsystem.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\IApi.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\ILowLevelApi.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\IBackgroundApi.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\V1\WhoAmI.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Migrations\_bc76d87c.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Migrations\_bc76d87c.Designer.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Migrations\_bc76d87c.cls.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Upload.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\UploadEndpoint.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Module.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Author.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Migrations\_8bbd99ac.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Migrations\_8bbd99ac.Designer.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Migrations\_8bbd99ac.cls.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\V1\CreateModule.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\V1\ListModules.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\V1\AddAuthor.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\V1\UploadModule.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\V1\Redirect.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\CryptoSecureToken.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\V1\StartSession.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\V1\EndSession.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\DoublyLinkedTemporaryDictionary.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\SessionEndpoint.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\V1\RespondWithCookie.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\V1\GetCIToken.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\CIToken.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Migrations\_df503cb9.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Migrations\_df503cb9.Designer.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Migrations\_df503cb9.cls.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\V1\ClearCITokens.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Api\ICIApi.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Cgi\CIEndpoint.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\NuGetContext.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Package.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\PackageVersion.cs" />
+    <Compile Include="Com\Latipium\Website\Apis\Model\Dependency.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\packages\LibGit2Sharp.NativeBinaries.1.0.129\build\LibGit2Sharp.NativeBinaries.props" Condition="Exists('..\..\packages\LibGit2Sharp.NativeBinaries.1.0.129\build\LibGit2Sharp.NativeBinaries.props')" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <DotNetNamingPolicy DirectoryNamespaceAssociation="Hierarchical" ResourceNamePolicy="FileName" />
+        </Policies>
+        <Deployment.LinuxDeployData generateScript="False" />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Com\" />
+    <Folder Include="Com\Latipium\" />
+    <Folder Include="Com\Latipium\Website\" />
+    <Folder Include="Com\Latipium\Website\Apis\" />
+    <Folder Include="Com\Latipium\Website\Apis\Model\" />
+    <Folder Include="Com\Latipium\Website\Apis\Model\Migrations\" />
+    <Folder Include="Com\Latipium\Website\Apis\Cgi\" />
+    <Folder Include="Com\Latipium\Website\Apis\Api\" />
+    <Folder Include="Com\Latipium\Website\Apis\Api\V1\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Com\Latipium\Website\Apis\Model\Migrations\_bc76d87c.resources">
+      <LogicalName>Com.Latipium.Website.Apis.Model.Migrations._bc76d87c.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Com\Latipium\Website\Apis\Model\Migrations\_8bbd99ac.resources">
+      <LogicalName>Com.Latipium.Website.Apis.Model.Migrations._8bbd99ac.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Com\Latipium\Website\Apis\Model\Migrations\_df503cb9.resources">
+      <LogicalName>Com.Latipium.Website.Apis.Model.Migrations._df503cb9.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

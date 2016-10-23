@@ -1,0 +1,13 @@
+#!/bin/sh
+# honey.daemon
+#
+# Copyright (c) 2016 Zach Deibert.
+# All Rights Reserved.
+
+if [ "a$1" == "a--daemonize" ]; then
+    "$0" &
+    echo "$!" > "/var/run/latipium-honey.pid"
+else
+    cd /srv/honey
+    mono Com.Latipium.Website.Honey.exe >> /var/log/latipium-honey.log 2>> /var/log/latipium-honey.error.log
+fi

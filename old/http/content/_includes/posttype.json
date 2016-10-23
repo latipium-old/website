@@ -1,0 +1,8 @@
+{
+    "posts": [
+        {% assign posts = site.posts | where: "type", page.type %}
+        {% for post in posts %}
+            "{{ post.url }}"
+        {% endfor %}
+    ]
+}

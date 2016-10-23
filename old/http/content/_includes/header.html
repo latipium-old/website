@@ -1,0 +1,152 @@
+{% if page.launcher %}{% else %}
+    <ul id="nav-side" class="side-nav collapsible">
+        <li {% if page.navgroup == "home" %}class="active"{% endif %}>
+            <a class="waves-effect waves-teal" href="{{ "/" | prepend: site.baseurl }}">
+                Home
+            </a>
+        </li>
+        <li {% if page.navgroup == "about" %}class="active"{% endif %}>
+            <a class="waves-effect waves-teal" href="{{ "/about" | prepend: site.baseurl }}">
+                About
+            </a>
+        </li>
+        <li>
+            {% assign page05 = page.navgroup | slice: 0, 5 %}
+            {% assign layout05 = layout.navgroup | slice: 0, 5 %}
+            <a class="waves-effect waves-teal collapsible-header {% if page05 == "play/" || layout05 == "play/" %}startup-click{% endif %}">
+                Play
+            </a>
+            <div class="collapsible-body">
+                <ul>
+                    <li {% if page.navgroup == "play/launch" %}class="active"{% endif %}>
+                        <a class="waves-effect waves-teal" href="{{ "/play" | prepend: site.baseurl }}">
+                            Launch
+                        </a>
+                    </li>
+                    <li {% if page.navgroup == "play/install" %}class="active"{% endif %}>
+                        <a class="waves-effect waves-teal" href="{{ "/install" | prepend: site.baseurl }}">
+                            Install
+                        </a>
+                    </li>
+                    <li {% if page.navgroup == "play/start" || layout.navgroup == "play/start" %}class="active"{% endif %}>
+                        <a class="waves-effect waves-teal" href="{{ "/start/game" | prepend: site.baseurl }}">
+                            Getting Started
+                        </a>
+                    </li>
+                    <li {% if page.navgroup == "play/tutorials" || layout.navgroup == "play/tutorials" %}class="active"{% endif %}>
+                        <a class="waves-effect waves-teal" href="{{ "/tutorials/game" | prepend: site.baseurl }}">
+                            Tutorials
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            {% assign page04 = page.navgroup | slice: 0, 4 %}
+            {% assign layout04 = layout.navgroup | slice: 0, 4 %}
+            <a class="waves-effect waves-teal collapsible-header {% if page04 == "dev/" || layout04 == "dev/" %}startup-click{% endif %}">
+                Develop
+            </a>
+            <div class="collapsible-body">
+                <ul class="collapsible">
+                    <li {% if page.navgroup == "dev/tutorials" || layout.navgroup == "dev/tutorials" %}class="active"{% endif %}>
+                        <a class="waves-effect waves-teal" href="{{ "/tutorials/dev" | prepend: site.baseurl }}">
+                            Tutorials
+                        </a>
+                    </li>
+                    <li ng-show="authenticated">
+                        <a class="waves-effect waves-teal collapsible-header {% if page.navgroup == "dev/mods" || layout.navgroup == "dev/mods" || page.navgroup == "dev/mods/new" %}startup-click{% endif %}">
+                            My Modules
+                        </a>
+                        <div class="collapsible-body">
+                            <ul>
+                                <li {% if page.navgroup == "dev/mods/new" %}class="active"{% endif %}>
+                                    <a class="waves-effect waves-teal" href="{{ "/dev/mods/new" | prepend: site.baseurl }}">
+                                        New Module
+                                    </a>
+                                </li>
+                                <li ng-repeat="mod in mods">
+                                    <a class="waves-effect waves-teal" ng-bind="mod" href="/dev/mods/my#{{ "mod" | angular }}"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <span class="hide-on-large-only">
+            <li ng-hide="authenticated">
+                <a href="/login">
+                    Log In
+                </a>
+            </li>
+            <li ng-show="authenticated">
+                Welcome,
+                <span ng-bind="name"></span>
+            </li>
+            <li ng-show="authenticated">
+                <a href="/login/logout">
+                    Log Out
+                </a>
+            </li>
+        </span>
+    </ul>
+{% endif %}
+<header class="page-header{% if page.navgroup == "play/launch" %} play{% endif %}">
+    <nav class="light-blue lighten-1 nav">
+        <div class="nav-wrapper container">
+            {% if page.customHeader %}
+                {{ page.customHeader }}
+            {% else %}
+                <a id="logo-container" class="brand-logo center">
+                    Latipium
+                </a>
+                {% if page.launcher %}
+                    <ul class="right hide-on-med-and-down">
+                        <li ng-hide="authenticated">
+                            <a href="login/index.html">
+                                Log In
+                            </a>
+                        </li>
+                        <li ng-show="authenticated">
+                            Welcome,
+                            <span ng-bind="name"></span>
+                        </li>
+                        <li ng-show="authenticated">
+                            <a href="login/logout/index.html">
+                                Log Out
+                            </a>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="right hide-on-med-and-down">
+                        <li ng-hide="authenticated">
+                            <a href="/login">
+                                Log In
+                            </a>
+                        </li>
+                        <li ng-show="authenticated">
+                            Welcome,
+                            <span ng-bind="name"></span>
+                        </li>
+                        <li ng-show="authenticated">
+                            <a href="/login/logout">
+                                Log Out
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="left">
+                        <li>
+                            <a class="side-nav-activate hamburger" data-activates="nav-side">
+                                <i class="material-icons">
+                                    menu
+                                </i>
+                            </a>
+                        </li>
+                    </ul>
+                {% endif %}
+            {% endif %}
+        </div>
+    </nav>
+    <nav class="nav-placeholder"></nav>
+</header>

@@ -1,0 +1,32 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+    {% for page in site.pages %}
+        {% if !page.robotIgnore %}
+            <url>
+                <loc>{{ page.url | prepend: site.baseurl | prepend: site.url }}</loc>
+                <changefreq>weekly</changefreq>
+            </url>
+        {% endif %}
+    {% endfor %}
+    {% for page in site.posts %}
+        {% if !page.robotIgnore %}
+            <url>
+                <loc>{{ page.url | prepend: site.baseurl | prepend: site.url }}</loc>
+                <lastmod>{{ page.date | date_to_iso8601 }}</lastmod>
+                <changefreq>never</changefreq>
+                <news:news>
+                    <news:publication>
+                        <news:name>Latipium</news:name>
+                        <news:language>en</news:language>
+                    </news:publication>
+                    <news:genres>Blog</news:genres>
+                    <news:publication_date>{{ page.date | date_to_iso8601 }}</news:publication_date>
+                    <news:title>{{ page.title | xml_escape }}</news:title>
+                </news:news>
+            </url>
+        {% endif %}
+    {% endfor %}
+</urlset>

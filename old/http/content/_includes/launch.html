@@ -1,0 +1,39 @@
+<div class="play-frame" ng-controller="play">
+    <div class="play-worlds container">
+        <div class="row" ng-repeat="world in worlds">
+            <div class="container world waves-effect waves-teal" ng-hide="world.IsSelected()" ng-click="world.Select()">
+                {% include launcher/world.html %}
+            </div>
+            <div class="container world active" ng-show="world.IsSelected()">
+                {% include launcher/world.html %}
+            </div>
+        </div>
+    </div>
+    <div class="play-btns container placeholder">
+        <div class="col s4">
+            <button class="btn"></button>
+        </div>
+    </div>
+    <div class="play-btns container">
+        <div class="row">
+            <div class="col s4 center-align">
+                <button class="btn waves-effect waves-teal" ng-show="worlds.AnySelected()">
+                    Join World
+                </button>
+                <button class="btn waves-effect waves-teal" ng-hide="worlds.AnySelected()" disabled>
+                    Join World
+                </button>
+            </div>
+            <div class="col s4 center-align">
+                <button class="btn waves-effect waves-teal" ng-click="worlds.push(Com.Latipium.Website.Play.World.RandomWorld())">
+                    New World
+                </button>
+            </div>
+            <div class="col s4 center-align">
+                <button class="btn waves-effect waves-teal" onclick="location.href = '/play/options'">
+                    Options
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

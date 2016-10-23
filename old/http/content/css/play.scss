@@ -1,0 +1,59 @@
+---
+---
+@charset "utf-8";
+
+.world {
+    border-bottom: 1px solid #E7E7E7;
+    display: block;
+}
+.world.active {
+    background-color: #E7E7E7;
+}
+header.play {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.play-btns {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px;
+}
+footer.play {
+    display: none;
+}
+.world.container .row {
+    margin: 10px;
+    margin-top: 0;
+}
+.play-worlds .row {
+    margin-bottom: 0;
+}
+.world-edit-box {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    max-width: 100%;
+}
+.world-edit-addr {
+    flex: 1 0 auto;
+}
+.world-edit-delim {
+    font-weight: bold;
+}
+.world-edit-port {
+    width: 100px;
+}
+.collapsible-header h5 {
+    margin-top: 0;
+    padding-top: 8px;
+}
+.collapsible-header .container .row {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
