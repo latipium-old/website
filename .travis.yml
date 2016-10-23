@@ -1,11 +1,8 @@
 language: node_js
 node_js:
 - "node"
-before_install:
-- npm install
-- rvm get stable
-- bundle install
-script: bash ./compile.sh
+before_install: ./install.sh
+script: ./compile.sh
 deploy:
   provider: script
   script: ./deploy.sh
