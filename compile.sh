@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/bash --login
 set -e
 
 # Update the PATH
-PATH=$PATH:node_modules/.bin/:$(bundle show jekyll)/exe/
 rvm use 2.3.0
+PATH=$PATH:node_modules/.bin/:$(bundle show jekyll)/exe/
 
 # Transpile typescripts
 tsc --sourceMap || true

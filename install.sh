@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash --login
 set -e
 
 # Install javascript dependencies
@@ -9,4 +9,6 @@ rvm install 2.3.0
 rvm use 2.3.0
 rvm rubygems latest
 ruby --version
+
+# Install bundler
 bundle install
