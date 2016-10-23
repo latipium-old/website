@@ -13,6 +13,3 @@ cat <<EOF > _site/index.html
 	</body>
 </html>
 EOF
-
-cat .gitignore | grep -v "/_site/" > .gitignore.new
-mv .gitignore.new .gitignore
