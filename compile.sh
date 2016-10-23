@@ -13,3 +13,6 @@ cat <<EOF > _site/index.html
 	</body>
 </html>
 EOF
+cat <<EOF > _site/CNAME
+www.latipium.com
+EOF
