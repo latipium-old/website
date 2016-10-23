@@ -1,8 +1,8 @@
 language: node_js
 node_js:
 - "node"
-before_install: ./install.sh
-script: ./compile.sh
+before_install: bash --login ./install.sh
+script: bash --login ./compile.sh
 deploy:
   provider: script
   script: ./deploy.sh
