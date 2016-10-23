@@ -3,6 +3,7 @@ set -e
 
 # Install javascript dependencies
 npm install
+node_modules/.bin/typings install
 
 # Install ruby dependencies
 rvm install 2.3.0

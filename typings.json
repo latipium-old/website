@@ -1,6 +1,7 @@
 {
   "globalDependencies": {
     "angular": "registry:dt/angular#1.5.0+20160627105203",
-    "jquery": "registry:dt/jquery#1.10.0+20160701124751"
+    "jquery": "registry:dt/jquery#1.10.0+20160701124751",
+    "materialize-css": "registry:dt/materialize-css#0.97.5+20161019124558"
   }
 }
