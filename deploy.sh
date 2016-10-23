@@ -31,10 +31,6 @@ cp -r _site/* target
 
 # Commit new changes
 cd target
-if [ -z $(git diff --exit-code) ]; then
-	echo "No changes were made to the site content."
-	exit 0
-fi
 git add --all
 git commit -m "$COMMIT_MESSAGE"
 cd ..
