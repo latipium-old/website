@@ -27,7 +27,7 @@ cd ..
 rm -rf target/*
 
 # Copy built files
-cp -r _site/* target
+cp -r $(ls -A _site | sed -e "s|^|_site/|") target
 
 # Commit new changes
 cd target
