@@ -1,2 +1,7 @@
 /deploy_key
 /_site/
+/.sass-cache/
+/js/*
+!/js/.dir
+node_modules/
+typings/

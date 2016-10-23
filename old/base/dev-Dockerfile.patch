@@ -1,8 +1,0 @@
-1c1
-< FROM resin/armv7hf-debian-qemu
----
-> FROM debian
-5a6,8
-> 
-> COPY cross-build-start /usr/local/bin/cross-build-start
-> COPY cross-build-end /usr/local/bin/cross-build-end
