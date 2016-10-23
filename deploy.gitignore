@@ -1,0 +1,14 @@
+---
+permalink: /.gitignore
+---
+*.ts
+/node_modules/
+/typings/
+/Gemfile
+/Gemfile.lock
+/LICENSE
+/README.md
+/deploy.sh
+/deploy_key.*
+/install.sh
+/typings.json
