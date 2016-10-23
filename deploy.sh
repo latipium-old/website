@@ -8,15 +8,16 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ "$TRAVIS_BRANCH" != "master" ]; th
 fi
 
 # Clone the deploy repo
-if [ ! -d target ]; then
-	git clone https://github.com/latipium/latipium.github.io.git target
-fi
 COMMIT_AUTHOR_NAME="$(git show -s --format="%aN" master)"
 COMMIT_AUTHOR_EMAIL="$(git show -s --format="%aE" master)"
-cd target
-git checkout master
-git pull origin master
-git remote add origin-ssh git@github.com:latipium/latipium.github.io.git
+if [ ! -d target ]; then
+	git clone https://github.com/latipium/latipium.github.io.git target
+	cd target
+	git remote add origin-ssh git@github.com:latipium/latipium.github.io.git
+else
+	cd target
+	git pull origin master
+fi
 git config user.name "$COMMIT_AUTHOR_NAME"
 git config user.email "$COMMIT_AUTHOR_EMAIL"
 cd ..
