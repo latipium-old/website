@@ -121,10 +121,11 @@ namespace Com.Latipium.Website.Play {
             PlayApiFactory.SuggestedWeight = Number.MIN_VALUE;
             $.getJSON("/play/apiPlatforms.json", data => {
                 for ( var i: number = 0; i < data.length; ++i ) {
-                    let desc: any = data[i];
-                    $.getScript(desc.FileName, () => {
-                        PlayApiFactory.Impls.push(new (eval(desc.Namespace + "." + desc.MainClass))());
-                    });
+                    (function (desc) {
+                        $.getScript(desc.FileName, () => {
+                            PlayApiFactory.Impls.push(new (eval(desc.Namespace + "." + desc.MainClass))());
+                        });
+                    })(data[i]);
                 }
             });
         }

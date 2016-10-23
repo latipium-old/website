@@ -275,7 +275,6 @@ namespace Com.Latipium.Website {
             });
             Apis.Init();
             new HeaderController();
-            exports.root = Com;
         }
     }
 }
@@ -283,4 +282,5 @@ namespace Com.Latipium.Website {
 namespace _ {
     import Setup = Com.Latipium.Website.Setup;
     Setup.Main();
+    window["Com"] = Com;
 }

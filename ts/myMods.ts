@@ -29,24 +29,25 @@ namespace Com.Latipium.Website.Dev.MyMods {
                         $scope.mods = [];
                         var loaded = 0;
                         for ( var i: number = 0; i < res.query_results[0].length; ++i ) {
-                            let id: string = res.query_results[0][i];
-                            $http.get("//apis.latipium.com/nuget/FindPackagesById()?$top=1&id=" + id).then(data => {
-                                let mod = Setup.XMLToJSON(data.data);
-                                if ( mod == null ) {
-                                    mod = {
-                                        "Id": id,
-                                        "Published": false
-                                    };
-                                } else {
-                                    mod.Id = id;
-                                    mod.Published = true;
-                                }
-                                $scope.mods.push(mod);
-                                if ( ++loaded == res.query_results[0].length ) {
-                                    $scope.loaded = true;
-                                    setTimeout(() => ($("ul.my-mods-tabs.tabs") as any).tabs(), 0);
-                                }
-                            });
+                            (function (id) {
+                                $http.get("//apis.latipium.com/nuget/FindPackagesById()?$top=1&id=" + id).then(data => {
+                                    let mod = Setup.XMLToJSON(data.data);
+                                    if ( mod == null ) {
+                                        mod = {
+                                            "Id": id,
+                                            "Published": false
+                                        };
+                                    } else {
+                                        mod.Id = id;
+                                        mod.Published = true;
+                                    }
+                                    $scope.mods.push(mod);
+                                    if ( ++loaded == res.query_results[0].length ) {
+                                        $scope.loaded = true;
+                                        setTimeout(() => ($("ul.my-mods-tabs.tabs") as any).tabs(), 0);
+                                    }
+                                });
+                            })(res.query_results[0][i]);
                         }
                     } else {
                         location.href = "/login";
