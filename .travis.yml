@@ -3,13 +3,10 @@ node_js:
 - "node"
 before_install:
 - npm install
+- rvm get stable
 - bundle install
 script: bash ./compile.sh
 deploy:
   provider: script
   script: ./deploy.sh
   skip_cleanup: true
-addons:
-  apt:
-    packages:
-    - ruby
