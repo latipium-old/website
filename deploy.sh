@@ -11,7 +11,7 @@ fi
 if [ ! -d target ]; then
 	git clone https://github.com/latipium/latipium.github.io.git target
 fi
-cd latipium.github.io
+cd target
 git checkout master
 git pull origin master
 git remote add origin-ssh git@github.com:latipium/latipium.github.io.git
@@ -38,7 +38,7 @@ eval $(ssh-agent -s)
 ssh-add deploy_key
 
 # Push to the deploy repo
-cd latipium.github.io
+cd target
 git push origin-ssh master
 cd ..
 
