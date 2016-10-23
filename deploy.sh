@@ -10,6 +10,7 @@ fi
 # Clone the deploy repo
 COMMIT_AUTHOR_NAME="$(git show -s --format="%aN" master)"
 COMMIT_AUTHOR_EMAIL="$(git show -s --format="%aE" master)"
+COMMIT_MESSAGE="$(git show -s --format="%s" master)"
 if [ ! -d target ]; then
 	git clone https://github.com/latipium/latipium.github.io.git target
 	cd target
@@ -28,11 +29,15 @@ rm -rf target/*
 # Copy built files
 cp -r _site/* target
 
-# Check for changes
+# Commit new changes
+cd target
 if [ -z $(git diff --exit-code) ]; then
 	echo "No changes were made to the site content."
 	exit 0
 fi
+git add --all
+git commit -m "$COMMIT_MESSAGE"
+cd ..
 
 # Decrypt the deploy key
 openssl aes-256-cbc -K $encrypted_cf618ab585db_key -iv $encrypted_cf618ab585db_iv -in deploy_key.enc -out deploy_key -d
