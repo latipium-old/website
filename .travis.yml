@@ -1,4 +1,5 @@
 language: generic
+script: bash ./compile.sh
 deploy:
   provider: script
   script: ./deploy.sh

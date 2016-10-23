@@ -1,3 +1,7 @@
+#!/bin/bash
+
+mkdir -p _site
+cat <<EOF > _site/index.html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -8,3 +12,4 @@
 		<h1>Hello, world!</h1>
 	</body>
 </html>
+EOF
