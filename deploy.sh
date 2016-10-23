@@ -11,12 +11,14 @@ fi
 if [ ! -d target ]; then
 	git clone https://github.com/latipium/latipium.github.io.git target
 fi
+COMMIT_AUTHOR_NAME="$(git show -s --format="%aN" master)"
+COMMIT_AUTHOR_EMAIL="$(git show -s --format="%aE" master)"
 cd target
 git checkout master
 git pull origin master
 git remote add origin-ssh git@github.com:latipium/latipium.github.io.git
-git config user.name "$(git show -s --format="%aN" master)"
-git config user.email "$(git show -s --format="%aE" master)"
+git config user.name "$COMMIT_AUTHOR_NAME"
+git config user.email "$COMMIT_AUTHOR_EMAIL"
 cd ..
 
 # Delete old files
