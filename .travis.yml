@@ -4,3 +4,8 @@ deploy:
   provider: script
   script: ./deploy.sh
   skip_cleanup: true
+addons:
+  apt:
+    packages:
+    - jekyll
+    - node-typescript
