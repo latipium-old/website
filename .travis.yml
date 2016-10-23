@@ -1,4 +1,9 @@
-language: generic
+language: node_js
+node_js:
+- "node"
+before_install:
+- npm install
+- bundle install
 script: bash ./compile.sh
 deploy:
   provider: script
@@ -7,5 +12,4 @@ deploy:
 addons:
   apt:
     packages:
-    - jekyll
-    - node-typescript
+    - bundler

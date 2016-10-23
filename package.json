@@ -4,7 +4,8 @@
     "version": "1.0.0",
     "main": "_site/js/updater.js",
     "devDependencies": {
-        "electron-prebuilt": "^1.2.3"
+        "electron-prebuilt": "^1.2.3",
+        "typescript": "^2.0.3"
     },
     "dependencies": {
         "electron": "^0.4.1",
