@@ -90,7 +90,8 @@ namespace Com.Latipium.Website {
         }
 
         public static Logout() {
-            // TODO
+            var referer: string = sessionStorage.getItem("referer");
+            Apis.Call(() => location.href = referer, "logout", {});
         }
     }
 
