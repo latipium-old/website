@@ -110,9 +110,9 @@ namespace Com.Latipium.Website {
                 ($(".collapsible") as any).collapsible({
                     accordion: false
                 });
-                ($("select") as any).material_select();
                 $(".startup-click").trigger("click");
                 Angular.Init();
+                ($("select") as any).material_select();
                 sessionStorage.setItem("referer", location.href);
             });
             new HeaderController();
