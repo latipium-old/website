@@ -43,221 +43,63 @@ namespace Com.Latipium.Website {
         }
     }
 
-    export class ApiQuery {
-        public type: string;
-        public data: string;
-    }
-
-    export class ApiRequest {
-        public version: number;
-        public session: boolean;
-        public queries: ApiQuery[];
-    }
-
-    export class ApiResponse {
-        public successful_queries: ApiQuery[];
-        public failed_queries: ApiQuery[];
-        public query_results: any[];
-    }
-
     export class Apis {
-        private static SessionToken: string;
         public static Version: number = 1;
 
-        public static Call(callback: (ApiResponse) => void, req?: ApiRequest | ApiQuery, ...reqs: ApiQuery[]) {
-            let _req: ApiRequest;
-            if ( req ) {
-                if ( req.hasOwnProperty("type") && req.hasOwnProperty("data") ) {
-                    reqs = reqs || [];
-                    reqs.push(req as ApiQuery);
-                    _req = new ApiRequest();
-                    _req.version = 1;
-                    _req.session = true;
-                } else {
-                    _req = req as ApiRequest;
-                }
-            } else {
-                _req = new ApiRequest();
-                _req.version = 1;
-                _req.session = true;
-            }
-            if ( reqs && reqs.length > 0 ) {
-                _req.queries = reqs;
-            } else if ( !_req.queries ) {
-                _req.queries = [];
-            }
-            if ( _req.session ) {
-                $.post("https://apis.latipium.com/init", JSON.stringify(_req), (data: any) => {
-                    $.get("https://apis.latipium.com/session/" + Apis.SessionToken + "?state=" + data, (data: any) => {
-                        if ( typeof(data) == "string" ) {
-                            let obj: any = data;
-                            try {
-                                obj = JSON.parse(data as string);
-                            } catch ( e ) {
-                            }
-                            callback(obj);
-                        } else {
-                            callback(data);
-                        }
-                    });
+        public static Call(callback: (any) => void, endpoint: string, data: { [key: string]: string }) {
+            if ( callback ) {
+                $.get({
+                    "cache": false,
+                    "data": data,
+                    "dataType": "json",
+                    "error": (xhr, status, error) => callback({
+                        "error": true,
+                        "success": false,
+                        "xhr": xhr,
+                        "status": status,
+                        "message": error
+                    }),
+                    "success": (data, status, xhr) => callback({
+                        "error": false,
+                        "success": true,
+                        "xhr": xhr,
+                        "status": status,
+                        "data": data
+                    }),
+                    "url": "https://latipium.ourproject.org/v" + Apis.Version + "/" + endpoint,
+                    "xhrFields": {
+                        "withCredentials": true
+                    }
                 });
             } else {
-                let form: HTMLFormElement = document.createElement("form");
-                form.hidden = true;
-                form.method = "POST";
-                form.action = "https://apis.latipium.com/init";
-                let input: HTMLInputElement = document.createElement("input");
-                input.type = "hidden";
-                input.name = "_";
-                input.value = JSON.stringify(_req);
-                form.appendChild(input);
-                document.body.appendChild(form);
-                setTimeout(() => form.submit(), 0);
-            }
-        }
-
-        public static PopCookie(name: string, doc: HTMLDocument = document): ApiResponse {
-            let val: string;
-            let cookies: string[] = doc.cookie.split(';');
-            for ( var i: number = 0; i < cookies.length; ++i ) {
-                let cookie: string[] = cookies[i].trim().split('=', 2);
-                if ( cookie[0] == name ) {
-                    val = cookie[1];
-                    break;
+                var props = Object.getOwnPropertyNames(data);
+                var query = [];
+                for ( var i = 0; i < props.length; ++i ) {
+                    query.push(encodeURIComponent(props[i]) + "=" + encodeURIComponent(data[props[i]]));
                 }
+                location.href = "https://latipium.ourproject.org/v" + Apis.Version + "/" + endpoint + (query.length > 0 ? "?" + query.join("&") : "");
             }
-            doc.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-            return val ? JSON.parse(val) : null;
-        }
-
-        public static Init() {
-            Apis.SessionToken = localStorage.getItem("authSession");
         }
     }
 
     export class Authentication {
         public static Login() {
-            localStorage.setItem("authReturn", sessionStorage.getItem("referer"));
-            Apis.Call(null, {
-                version: Apis.Version,
-                session: false,
-                queries: [
-                    {
-                        "type": "startSession",
-                        "data": ""
-                    },
-                    {
-                        "type": "whoami",
-                        "data": ""
-                    },
-                    {
-                        "type": "respondWithCookie",
-                        "data": "authResponse"
-                    },
-                    {
-                        "type": "redirect",
-                        "data": (window as any).launcher ? `file://${location.pathname.substr(0, location.pathname.length - "index.html".length)}callback/index.html` : "https://latipium.com/login/callback"
-                    }
-                ]
+            Apis.Call(null, "redirect", {
+                "url": sessionStorage.getItem("referer")
             });
         }
 
         public static Logout() {
-            Apis.Call(() => {
-                localStorage.removeItem("authSession");
-                localStorage.removeItem("authName");
-                if ( history.length > 1 ) {
-                    history.back();
-                } else {
-                    location.href = "/";
-                }
-            }, {
-                "type": "endSession",
-                "data": ""
-            });
-        }
-
-        private static _LoginCallback(res: ApiResponse) {
-            let session: string;
-            let name: string;
-            for ( var i: number = 0; i < res.successful_queries.length; ++i ) {
-                if ( res.successful_queries[i].type == "startSession" ) {
-                    session = res.query_results[i];
-                    if ( name ) {
-                        break;
-                    }
-                } else if ( res.successful_queries[i].type == "whoami" ) {
-                    name = res.query_results[i];
-                    if ( session ) {
-                        break;
-                    }
-                }
-            }
-            if ( session && name ) {
-                localStorage.setItem("authName", name);
-                localStorage.setItem("authSession", session);
-                let url: string = localStorage.getItem("authReturn");
-                if ( url ) {
-                    localStorage.removeItem("authReturn");
-                }
-                location.href = url || "/";
-            } else {
-                location.href = "/login";
-            }
-        }
-
-        public static LoginCallback() {
-            let res: ApiResponse;
-            if ( (window as any).launcher ) {
-                let iframe: HTMLIFrameElement = document.createElement("iframe");
-                iframe.hidden = true;
-                iframe.src = "https://latipium.com/";
-                document.body.appendChild(iframe);
-                setTimeout(() => {
-                    Authentication._LoginCallback(Apis.PopCookie("authResponse", iframe.contentDocument));
-                    document.body.removeChild(iframe);
-                }, 0);
-            } else {
-                Authentication._LoginCallback(Apis.PopCookie("authResponse"));
-            }
+            // TODO
         }
     }
 
     export class HeaderController {
         public constructor() {
-            Angular.Controller("header", ($scope) => {
-                let name: string = localStorage.getItem("authName");
-                if ( name ) {
-                    $scope.authenticated = true;
-                    $scope.name = name;
-                    Apis.Call(res => {
-                        if ( res.successful_queries && res.successful_queries.length > 0 ) {
-                            for ( var i: number = 0; i < res.successful_queries.length; ++i ) {
-                                if ( res.successful_queries[i].type == "whoami" ) {
-                                    if ( res.query_results[i] != name ) {
-                                        localStorage.setItem("authName", res.query_results[i]);
-                                        $scope.$apply(() => $scope.name = res.query_results[i]);
-                                    }
-                                } else if ( res.successful_queries[i].type == "listModules" ) {
-                                    $scope.$apply(() => $scope.mods = res.query_results[i]);
-                                }
-                            }
-                        } else {
-                            localStorage.removeItem("authSession");
-                            localStorage.removeItem("authName");
-                            $scope.$apply(() => $scope.authenticated = false);
-                        }
-                    }, {
-                        "type": "whoami",
-                        "data": ""
-                    }, {
-                        "type": "listModules",
-                        "data": ""
-                    });
-                } else {
-                    $scope.authenticated = false;
-                }
-            });
+            Angular.Controller("header", $scope => Apis.Call(res => $scope.$apply(() => {
+                $scope.name = res.success ? res.data.name : null;
+                $scope.authenticated = res.success;
+            }), "id", {}));
         }
     }
 
@@ -271,9 +113,8 @@ namespace Com.Latipium.Website {
                 ($("select") as any).material_select();
                 $(".startup-click").trigger("click");
                 Angular.Init();
-                sessionStorage.setItem("referer", location.pathname);
+                sessionStorage.setItem("referer", location.href);
             });
-            Apis.Init();
             new HeaderController();
         }
     }
