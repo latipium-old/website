@@ -4,7 +4,7 @@ namespace Com.Latipium.Website.Play.Infinite {
 
         public Load() {
             let element: HTMLScriptElement = this.Element = document.createElement("script");
-            element.src = "//raw.githubusercontent.com/tobiasahlin/infinite-jekyll/master/js/infinite-jekyll.js";
+            element.src = "/js/infinite-jekyll.js";
             document.head.appendChild(element);
         }
 

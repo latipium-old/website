@@ -27,6 +27,9 @@ function tsProj() {
 tsProj . "[Main TypeScript]     "
 tsProj electron "[Electron TypeScript] "
 
+# Download dependencies
+curl -o js/infinite-jekyll.js https://raw.githubusercontent.com/tobiasahlin/infinite-jekyll/master/js/infinite-jekyll.js
+
 # Build Jekyll content
 if [ $dev -eq 1 ]; then
     jekyll serve -H 0.0.0.0 | prefixOutput "[Jekyll]              " &
