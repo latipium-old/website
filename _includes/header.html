@@ -54,23 +54,6 @@
                             Tutorials
                         </a>
                     </li>
-                    <li ng-show="authenticated">
-                        <a class="waves-effect waves-teal collapsible-header {% if page.navgroup == "dev/mods" || layout.navgroup == "dev/mods" || page.navgroup == "dev/mods/new" %}startup-click{% endif %}">
-                            My Modules
-                        </a>
-                        <div class="collapsible-body">
-                            <ul>
-                                <li {% if page.navgroup == "dev/mods/new" %}class="active"{% endif %}>
-                                    <a class="waves-effect waves-teal" href="{{ "/dev/mods/new" | prepend: site.baseurl }}">
-                                        New Module
-                                    </a>
-                                </li>
-                                <li ng-repeat="mod in mods">
-                                    <a class="waves-effect waves-teal" ng-bind="mod" href="/dev/mods/my#{{ "mod" | angular }}"></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
                 </ul>
             </div>
         </li>
