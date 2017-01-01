@@ -8,6 +8,9 @@ main {
 body, .angular-wrapper, .page {
     min-height: 100vh;
 }
+body {
+    overflow: auto !important;
+}
 .nav {
     position: fixed;
     top: 0;
@@ -48,4 +51,15 @@ header {
 }
 .height-48 {
     height: 48px;
+}
+.collection-item.avatar p {
+    color: #5F5F5F;
+}
+.slider {
+    margin-bottom: 10px;
+}
+.btn-flat.square {
+    width: 36px;
+    padding: 0;
+    text-align: center;
 }

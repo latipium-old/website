@@ -1,5 +1,5 @@
 <div class="play-frame" ng-controller="play">
-    <div class="play-worlds container">
+    <div class="play-worlds container" ng-show="worlds.length > 0">
         <div class="row" ng-repeat="world in worlds">
             <div class="container world waves-effect waves-teal" ng-hide="world.IsSelected()" ng-click="world.Select()">
                 {% include launcher/world.html %}
@@ -9,31 +9,444 @@
             </div>
         </div>
     </div>
-    <div class="play-btns container placeholder">
-        <div class="col s4">
-            <button class="btn"></button>
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large waves-effect waves-light red">
+            <i class="material-icons">
+                add
+            </i>
+        </a>
+        <ul>
+            <li>
+                <a class="btn-floating green" ng-click="worlds.push(Com.Latipium.Website.Play.World.RandomWorld())">
+                    <i class="material-icons">
+                        computer
+                    </i>
+                </a>
+            </li>
+            <li>
+                <a class="btn-floating blue" ng-click="worlds.push(Com.Latipium.Website.Play.World.RemoteWorld())">
+                    <i class="material-icons">
+                        cast
+                    </i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="modal modal-autoopen" ng-hide="game.Initialized">
+        <div class="modal-content">
+            <h4>Loading Latipium</h4>
+            <p>
+                Please wait a few seconds while Latipium loads.
+            </p>
+            <div class="center">
+                <div class="preloader-wrapper big active center">
+                    <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a onclick="history.back()" class="modal-action waves-effect waves-green btn-flat">
+                Cancel
+            </a>
         </div>
     </div>
-    <div class="play-btns container">
-        <div class="row">
-            <div class="col s4 center-align">
-                <button class="btn waves-effect waves-teal" ng-show="worlds.AnySelected()">
-                    Join World
-                </button>
-                <button class="btn waves-effect waves-teal" ng-hide="worlds.AnySelected()" disabled>
-                    Join World
-                </button>
-            </div>
-            <div class="col s4 center-align">
-                <button class="btn waves-effect waves-teal" ng-click="worlds.push(Com.Latipium.Website.Play.World.RandomWorld())">
-                    New World
-                </button>
-            </div>
-            <div class="col s4 center-align">
-                <button class="btn waves-effect waves-teal" onclick="location.href = '/play/options'">
-                    Options
-                </button>
-            </div>
+    <div class="modal modal-autoopen" ng-show="game.Initialized && !game.DaemonRunning">
+        <div class="modal-content">
+            <h4>Please Install Latipium</h4>
+            <p>
+                Before you can launch Latipium from your web browser, you must install Latipium onto your computer.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="{{ site.baseurl }}/install/" class="modal-action waves-effect waves-green btn-flat">
+                Download Now
+            </a>
+            <a onclick="history.back()" class="modal-action waves-effect waves-green btn-flat">
+                Cancel
+            </a>
         </div>
     </div>
+    <div class="modal modal-autoopen" ng-show="game.Initialized && game.DaemonRunning && !game.Installed && !game.IsInstalling">
+        <div class="modal-content">
+            <h4>Automatic Latipium Install</h4>
+            <p>
+                Before you can launch Latipium, there are a few more things to install.
+                Would you like to automatically install them for you now?
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a ng-click="game.InstallBaseSystem()" class="modal-action waves-effect waves-green btn-flat">
+                Install Now
+            </a>
+            <a onclick="history.back()" class="modal-action waves-effect waves-green btn-flat">
+                Cancel
+            </a>
+        </div>
+    </div>
+    <div class="modal modal-autoopen install-modal" ng-class="{'modal-fixed-footer': installLogVisible}" ng-show="game.IsInstalling">
+        <div class="modal-content">
+            <h4>Installing Software</h4>
+            <p>
+                Latipium is currently installing software on your computer.  Please wait until this finishes.
+            </p>
+            <div class="center">
+                <div class="preloader-wrapper big active center">
+                    <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ul class="collapsible" ng-hide="game.InstallLog.IsEmpty">
+                <li>
+                    <div class="collapsible-header" ng-click="installLogVisible = !installLogVisible">
+                        <span ng-bind="game.InstallLog.LastLine"></span>
+                        <i class="material-icons right" ng-hide="installLogVisible">
+                            expand_more
+                        </i>
+                        <i class="material-icons right" ng-show="installLogVisible">
+                            expand_less
+                        </i>
+                    </div>
+                    <div class="collapsible-body">
+                        <pre ng-bind="game.InstallLog.Full"></pre>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal modal-autoopen" ng-show="game.HasErrored">
+        <div class="modal-content">
+            <h4>An Error Has Occurred</h4>
+            <p>
+                An error has occurred while installing software.
+                Please try reloading the webpage, then restarting your computer if it is still failing.
+                If neither of those help, please submit a bug report.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a ng-click="game.ClearErrorState()" class="modal-action waves-effect waves-green btn-flat">
+                Ignore
+            </a>
+            <a onclick="location.reload()" class="modal-action waves-effect waves-green btn-flat">
+                Reload Page
+            </a>
+            <a onclick="history.back()" class="modal-action waves-effect waves-green btn-flat">
+                Go Back
+            </a>
+        </div>
+    </div>
+    <div class="modal modal-autoopen" ng-show="game.GraphicsSettings != null">
+        <div class="modal-content">
+            <h4>Please Review Graphics Settings</h4>
+            <div class="input-field col s12" ng-repeat="field in game.GraphicsSettings.GetFields()" ng-hide="$parent.game.GraphicsSettings.GetOptions(field).length == 1">
+                <select ng-model="i" ng-init="i = 0" ng-options="o.Value as o.Key for o in $parent.game.GraphicsSettings.GetOptionsForSelect(field)" ng-change="$parent.game.GraphicsSettings.SelectOption($parent.game.GraphicsSettings.GetOptions(field)[i])"></select>
+                <label ng-bind="field"></label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="waves-effect waves-green btn-flat" ng-click="game.Launch()">
+                Launch
+            </a>
+        </div>
+    </div>
+    <div class="modal modal-autoopen client-modal" ng-class="{'modal-fixed-footer': clientLogVisible}" ng-show="game.IsClientRunning">
+        <div class="modal-content">
+            <h4>Launching Game</h4>
+            <div class="center" ng-show="game.ClientLog.IsEmpty">
+                <div class="preloader-wrapper big active center">
+                    <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ul class="collapsible" ng-hide="game.ClientLog.IsEmpty">
+                <li>
+                    <div class="collapsible-header" ng-click="clientLogVisible = !clientLogVisible">
+                        <span ng-bind="game.ClientLog.LastLine"></span>
+                        <i class="material-icons right" ng-hide="clientLogVisible">
+                            expand_more
+                        </i>
+                        <i class="material-icons right" ng-show="clientLogVisible">
+                            expand_less
+                        </i>
+                    </div>
+                    <div class="collapsible-body">
+                        <pre ng-bind="game.ClientLog.Full"></pre>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal bottom-sheet" id="options">
+        <div class="modal-content">
+            <h4>Latipium Options</h4>
+            <ul class="collection">
+                <li class="collection-item avatar modal-action modal-close waves-effect waves-teal" data-target="manageMods" ng-click="openInstalledMods()">
+                    <span class="title">
+                        Add/Remove Mods
+                    </span>
+                    <p>
+                        Install and/or remove mods to/from your computer
+                    </p>
+                </li>
+                <li class="collection-item avatar modal-action modal-close waves-effect waves-teal" ng-repeat="option in options" ng-click="option.Edit()">
+                    <img ng-src="option.Icon" class="circle" ng-hide="option.Icon == null" />
+                    <span class="title" ng-bind="option.Name"></span>
+                    <p ng-bind="option.Description"></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal modal-fixed-footer" id="manageMods">
+        <div class="modal-content">
+            <h4>Add/Remove Mods</h4>
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs manageModsTabs">
+                        <li class="tab col s4">
+                            <a class="blue-text" href="#installedMods">
+                                Installed
+                            </a>
+                        </li>
+                        <li class="tab col s4">
+                            <a class="blue-text" href="#recommendedMods">
+                                Recommended
+                            </a>
+                        </li>
+                        <li class="tab col s4">
+                            <a class="blue-text" href="#searchMods">
+                                Search
+                            </a>
+                        </li>
+                    </ul>
+                    <div id="installedMods" class="col s12 content">
+                        <div class="center" ng-hide="game.LoadedInstalledModsPage">
+                            <div class="preloader-wrapper big active center">
+                                <div class="spinner-layer spinner-blue-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="highlight" ng-show="game.LoadedInstalledModsPage">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Mod Name
+                                    </th>
+                                    <th>
+                                        Installed Version
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="mod in game.InstalledMods">
+                                    <td>
+                                        <span ng-bind="mod.Name" class="tooltipped" data-position="top" data-delay="1500" data-tooltip="{{ "mod.Id" | angular }}"></span>
+                                    </td>
+                                    <td ng-bind="mod.Version"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="recommendedMods" class="col s12 content">
+                        <div class="center" ng-hide="game.LoadedRecommendedModsPage">
+                            <div class="preloader-wrapper big active center">
+                                <div class="spinner-layer spinner-blue-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="highlight" ng-show="game.LoadedRecommendedModsPage">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Mod Name
+                                    </th>
+                                    <th>
+                                        Latest Version
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="mod in game.RecommendedMods">
+                                    <td>
+                                        <span ng-bind="mod.Name" class="tooltipped" data-position="top" data-delay="1500" data-tooltip="{{ "mod.Id" | angular }}"></span>
+                                    </td>
+                                    <td>
+                                        <span ng-bind="mod.Version"></span>
+                                        <a class="modal-action modal-close btn-flat waves-effect square right" href="#confirmInstall" onclick="$('#manageMods').modal('close')" ng-click="$parent.pendingInstallId = mod.Id">
+                                            <i class="material-icons">
+                                                file_download
+                                            </i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="searchMods" class="col s12 content">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <form onsubmit="return false" ng-submit="game.SearchMods(searchTerm)">
+                                    <div class="input-field">
+                                        <input name="search" type="search" ng-model="searchTerm" required />
+                                        <label for="search">
+                                            <i class="material-icons">
+                                                search
+                                            </i>
+                                        </label>
+                                        <i class="material-icons" ng-click="searchTerm = null">
+                                            close
+                                        </i>
+                                    </div>
+                                </form>
+                            </div>
+                        </nav>
+                        <table class="highlight">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Mod Name
+                                    </th>
+                                    <th>
+                                        Latest Version
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="mod in game.SearchedMods">
+                                    <td>
+                                        <span ng-bind="mod.Name" class="tooltipped" data-position="top" data-delay="1500" data-tooltip="{{ "mod.Id" | angular }}"></span>
+                                    </td>
+                                    <td>
+                                        <span ng-bind="mod.Version"></span>
+                                        <a class="modal-action modal-close btn-flat waves-effect square right" href="#confirmInstall" onclick="$('#manageMods').modal('close')" ng-click="$parent.pendingInstallId = mod.Id" ng-hide="$parent.game.IsInstalled(mod.Id)">
+                                            <i class="material-icons">
+                                                file_download
+                                            </i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="center" ng-show="game.SearchLoading">
+                            <div class="preloader-wrapper big active center">
+                                <div class="spinner-layer spinner-blue-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-green btn-flat">
+                Finish
+            </a>
+        </div>
+    </div>
+    <div class="modal" id="confirmInstall">
+        <div class="modal-content">
+            <h4>Confirm Software Installation</h4>
+            <p>
+                You are about to install software that has not been verified by Latipium and has not been scanned for viruses.
+                Please be careful about installing this kind of software.
+                Would you like to continue with the installation?
+            </p>
+            <a ng-href="https://www.nuget.org/packages/{{ "pendingInstallId" | angular }}">More Information</a>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-red btn-flat" href="#manageMods">
+                Cancel
+            </a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="game.InstallPackage(pendingInstallId)">
+                Install
+            </a>
+        </div>
+    </div>
+    <div class="modal modal-autoopen" ng-show="options.AnyEditing()">
+        <div class="modal-content">
+            <h4>
+                <img ng-src="options.CurrentlyEditing.Icon" class="circle" ng-hide="options.CurrentlyEditing.Icon == null" />
+                <span ng-bind="options.CurrentlyEditing.Name"></span>
+            </h4>
+            <ul class="collection">
+                <li class="collection-item avatar" ng-repeat="option in options.CurrentlyEditing" ng-class="{'waves-effect': option.Type != Com.Latipium.Website.Play.OptionType.Boolean && !option.Editing, 'waves-teal': option.Type != Com.Latipium.Website.Play.OptionType.Boolean && !option.Editing}" ng-show="option.Visible" ng-click="option.Edit()">
+                    <img ng-src="option.Icon" class="circle" ng-hide="option.Icon == null" />
+                    <span class="title" ng-bind="option.Name"></span>
+                    <p ng-bind="option.Description"></p>
+                    <div class="switch secondary-content" ng-if="option.Type == Com.Latipium.Website.Play.OptionType.Boolean">
+                        <label>
+                            Off
+                            <input type="checkbox" ng-model="option.Value" />
+                            <span class="lever"></span>
+                            On
+                        </label>
+                    </div>
+                    <div class="input-field" ng-show="option.Editing">
+                        <input type="text" ng-model="option.Value" ng-if="option.Type == Com.Latipium.Website.Play.OptionType.String" />
+                        <div slider class="slider" start="{{ "option.Minimum" | angular }}" end="{{ "option.Maximum" | angular }}" step="{{ "option.Step" | angular }}" ng-if="option.Type == Com.Latipium.Website.Play.OptionType.Number" ng-model="option.Value"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-action waves-effect waves-green btn-flat" ng-click="options.CurrentlyEditing.FinishEditing()">
+                Save
+            </a>
+        </div>
+    </div>
+    <div class="modal-overlay" style="z-index: 1002; display: block; opacity: 0.5;"
+        ng-show="!game.Initialized || (game.Initialized && !game.DaemonRunning) || (game.Initialized && game.DaemonRunning && !game.Installed && !game.IsInstalling) || game.IsInstalling || game.HasErrored || game.IsClientRunning || options.AnyEditing() || game.GraphicsSettings != null"></div>
 </div>

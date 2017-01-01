@@ -6,3 +6,4 @@
 node_modules/
 typings/
 /Gemfile.lock
+/css/nouislider.css

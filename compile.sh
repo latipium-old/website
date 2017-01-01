@@ -29,6 +29,9 @@ tsProj electron "[Electron TypeScript] "
 
 # Download dependencies
 curl -o js/infinite-jekyll.js https://raw.githubusercontent.com/tobiasahlin/infinite-jekyll/master/js/infinite-jekyll.js
+curl -o js/nouislider.js https://raw.githubusercontent.com/Dogfalo/materialize/master/extras/noUiSlider/nouislider.js
+curl -o css/nouislider.css https://raw.githubusercontent.com/Dogfalo/materialize/master/extras/noUiSlider/nouislider.css
+curl -o js/angular-nouislider.min.js https://raw.githubusercontent.com/vasyabigi/angular-nouislider/master/src/nouislider.min.js
 
 # Build Jekyll content
 if [ $dev -eq 1 ]; then

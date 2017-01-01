@@ -17,7 +17,9 @@ namespace Com.Latipium.Website {
 
         public static Init() {
             if ( !Angular.app ) {
-                Angular.app = angular.module("latipium", []);
+                Angular.app = angular.module("latipium", [
+                    "nouislider"
+                ]);
             }
             let directives: string[] = Object.keys(Angular.directives);
             for ( var i: number = 0; i < directives.length; ++i ) {
@@ -114,9 +116,36 @@ namespace Com.Latipium.Website {
                 $(".startup-click").trigger("click");
                 Angular.Init();
                 ($("select") as any).material_select();
+                ($(".modal") as any).modal();
+                ($(".modal-autoopen") as any).modal({
+                    opacity: 0,
+                    dismissible: false
+                });
+                ($(".modal-autoopen") as any).modal("open");
+                $("[id^=materialize-modal-overlay-]").remove();
                 sessionStorage.setItem("referer", location.href);
             });
             new HeaderController();
+            $.fn.noUiSlider = function(config: any) {
+                let s = $(this);
+                for ( var i: number = 0; i < s.length; ++i ) {
+                    noUiSlider.create(s[i], config);
+                    s[i].noUiSlider.on("slide", () => {
+                        s.trigger("slide");
+                    });
+                }
+                this.val = (val?: number) => {
+                    if ( val ) {
+                        for ( var i: number = 0; i < s.length; ++i ) {
+                            s[i].noUiSlider.set([
+                                val
+                            ]);
+                        }
+                    } else {
+                        return s[0].noUiSlider.get();
+                    }
+                };
+            };
         }
     }
 }
