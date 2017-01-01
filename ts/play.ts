@@ -171,7 +171,7 @@ namespace Com.Latipium.Website.Play {
 
         public InstallPackage(id: string): void {
             this.IsInstalling = true;
-            this.InstallLog.Clear();
+            setTimeout(() => this.InstallLog.Clear(), 0);
             this.Launcher.InstallPackage(id, null, success => {
                 this.$apply(() => {
                     this.IsInstalling = false;
