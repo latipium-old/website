@@ -117,16 +117,15 @@ namespace Com.Latipium.Website.Play.Launcher.Daemon {
         private ExitCode: number;
 
         public ProcessResponse(data: any): void {
-            if ( (data.StdOut || data.StdErr) && this.ReadCallback ) {
-                this.ReadCallback(data.StdOut, data.StdErr);
+            if ( data.StdOut && data.StdErr && (data.StdOut.length > 0 || data.StdErr.length > 0) && this.ReadCallback ) {
+                for ( var i: number = 0; i < data.StdOut.length || i < data.StdErr.length; ++i ) {
+                    this.ReadCallback(data.StdOut[i], data.StdErr[i]);
+                }
             }
             if ( !data.IsRunning ) {
                 if ( data.ExitCode != -65536 ) {
                     this.ExitCode = data.ExitCode;
-                    if ( (data.StdOut || data.StdErr) && this.ReadCallback ) {
-                        this.SendRequest("GET", null, data => this.ProcessResponse(data), () => {});
-                        return;
-                    }
+                    this.SendRequest("DELETE", null, () => {}, () => {});
                 }
                 this.PollInterval = -1;
                 if ( this.KilledCallback && !this.DeathNotified ) {
