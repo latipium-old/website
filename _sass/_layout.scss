@@ -63,3 +63,13 @@ header {
     padding: 0;
     text-align: center;
 }
+ul#nav-side > li > a {
+    padding: 0 32px;
+}
+ul#nav-side li ul a {
+    padding: 0 48px;
+    color: rgba(0, 0, 0, 0.87);
+}
+ul#nav-side li ul li.active {
+    background-color: rgba(0, 0, 0, 0.05);
+}
