@@ -119,7 +119,7 @@ namespace Com.Latipium.Website.Play {
                 }, stderr => {
                     this.ClientLog.Append(stderr);
                 }, exitCode => {
-                    this.IsClientRunning = false;
+                    this.$apply(() => this.IsClientRunning = false);
                 });
             };
             if ( this.GraphicsSettings ) {
