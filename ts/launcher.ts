@@ -208,6 +208,7 @@ namespace Com.Latipium.Website.Play.Launcher {
         private RootDirectory: string;
         private PathSeparator: string;
         private UseMono: boolean;
+        private MonoPath: string;
 
         public LaunchCLRProcess(exe: string, args: string, dir: string, callback: (proc: IProcess) => void, envTransform: (env: any) => any = env => env, useMono: () => boolean = () => this.UseMono): void {
             this.EnvironmentController.GetVariables(vars => {
@@ -218,24 +219,31 @@ namespace Com.Latipium.Website.Play.Launcher {
                 }
                 env = envTransform(env);
                 if ( useMono() ) {
-                    this.EnvironmentController.GetOS(os => {
-                        let path: string[] = env.PATH.split(os == "windows" ? /;/g : /[:;]/g);
-                        let mono: string = os == "windows" ? "mono.exe" : "mono";
-                        let iter: (i: number) => void = i => {
-                            if ( i < path.length ) {
-                                this.FileController.Exists(path[i] + this.PathSeparator + mono, exists => {
-                                    if ( exists ) {
-                                        this.ProcessController.Spawn(path[i] + this.PathSeparator + mono, "\"" + exe + "\" " + args, dir, env, callback);
-                                    } else {
-                                        iter(i + 1);
-                                    }
-                                });
-                            } else {
-                                callback(null);
+                    if ( this.MonoPath ) {
+                        this.ProcessController.Spawn(this.MonoPath, "\"" + exe + "\" " + args, dir, env, callback);
+                    } else {
+                        this.EnvironmentController.GetOS(os => {
+                            let path: string[] = env.PATH.split(os == "windows" ? /;/g : /[:;]/g);
+                            let mono: string = os == "windows" ? "mono.exe" : "mono";
+                            var failed: number = 0;
+                            for ( var i: number = 0; i < path.length; ++i ) {
+                                ((testPath: string) => {
+                                    this.FileController.Exists(testPath, exists => {
+                                        if ( exists ) {
+                                            if ( !this.MonoPath ) {
+                                                this.MonoPath = testPath;
+                                                this.ProcessController.Spawn(testPath, "\"" + exe + "\" " + args, dir, env, callback);
+                                            }
+                                        } else {
+                                            if ( ++failed == path.length ) {
+                                                callback(null);
+                                            }
+                                        }
+                                    });
+                                })(path[i] + this.PathSeparator + mono);
                             }
-                        };
-                        iter(0);
-                    });
+                        });
+                    }
                 } else {
                     this.ProcessController.Spawn(exe, args, dir, env, callback);
                 }
