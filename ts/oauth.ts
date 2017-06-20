@@ -5,7 +5,8 @@ namespace Com.Latipium.Website.OAuth {
                 let expire = new Date();
                 expire.setTime(expire.getTime() + 10 * 60 * 1000);
                 document.cookie = "OAuthResponse=" + encodeURIComponent(JSON.stringify({
-                    "access_token": "true"
+                    "access_token": "true",
+                    "port": location.hash.substr(1)
                 })) + "; expires=" + expire.toUTCString() + "; path=/;";
                 location.href = "https://api.travis-ci.org/auth/handshake?redirect_uri=https://latipium.com/oauth";
             } else {
